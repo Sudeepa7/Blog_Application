@@ -1,4 +1,4 @@
-import User from "../model/User";
+import User from "../model/User.js";
 
 // Defining and exporting the getAllUsers function
 export const getAllUsers = async (req, res, next) => {
@@ -6,7 +6,7 @@ export const getAllUsers = async (req, res, next) => {
     try {
         users = await User.find(); // Fetching all users from the database
     } catch (err) {
-        console.log(err); // Logging any errors
+        return console.log(err); // Logging any errors
     }
 
     // Checking if users were found
@@ -16,4 +16,33 @@ export const getAllUsers = async (req, res, next) => {
 
     // Sending back the users data
     return res.status(200).json({ users });
+};
+
+export const signUp = async (req,res,next) => {
+    const {name,email,password} = req.body;
+
+    let existingUser;
+
+    try{
+        existingUser = await User.findOne({email});
+    }catch(err){
+        return console.log(err);
+    }
+
+    if(existingUser){
+        return res.status(400).json({message : "User Already exist! loging instead."});
+    }
+
+    const user = new User({
+        name,
+        email,
+        password
+    });
+
+    try{
+        await user.save();
+    }catch (err){
+        console.log(err);
+    }
+    return res.status(201).json({user})
 };
