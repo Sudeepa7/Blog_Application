@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const blogScema = new Schema({
+const blogSchema = new Schema({
     title : {
         type : String,
         required : true
@@ -16,9 +16,10 @@ const blogScema = new Schema({
         required: true
     },
     user : {
-        type : String,
-        required : true
-    }
+        type : mongoose.Types.ObjectId,
+        ref:"User",
+        required : true,
+    },
 });
 
-export default mongoose.model("Blog",blogScema);
+export default mongoose.model("Blog",blogSchema);
